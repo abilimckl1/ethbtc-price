@@ -13,7 +13,6 @@ socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 thread_lock = Lock()
 
-#url = 'https://api.coinbase.com/v2/prices/btc-usd/spot'
 urlBTCByBit = 'https://api-testnet.bybit.com/v2/public/tickers?symbol=BTCUSDT'
 urlBTCBinance = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'
 urlETHByBit = 'https://api-testnet.bybit.com/v2/public/tickers?symbol=ETHUSDT'
