@@ -23,6 +23,12 @@
                 socket.emit('my_event', { data: 'I\'m connected!' });
             });
 
+            socket.on('Response_Verdict_BTC', function (msg, cb) {
+                $('#logVerdict').text($('<div/>').append(msg.data).html());
+                if (cb)
+                    cb();
+            });
+
             socket.on('Response_BTCUSDT_ByBit', function (msg, cb) {
                 $('#log1').text($('<div/>').append(msg.data).html());
                 if (cb)
@@ -49,12 +55,13 @@
         </nav>
     
         <div class="container">
-            <h2>Bitcoin Price</h2>
+            <h1>Bitcoin Price (USDT/BTC)</h1>
             
+            <h1>
+                <div id="logVerdict"></div>
+            </h1>
             <h2>
-                <div id="log1"></div>
-            </h2>
-            <h2>
+                <div id="log1"></div><br>
                 <div id="log2"></div>
             </h2>
         </div>

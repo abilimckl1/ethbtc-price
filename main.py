@@ -1,4 +1,5 @@
 from threading import Lock
+from tkinter.messagebox import NO
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO, emit
 import requests
@@ -6,7 +7,7 @@ import requests
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
 # the best option based on installed packages.
-async_mode = "eventlet"
+async_mode = None
 
 app = Flask(__name__)
 socketio = SocketIO(app, async_mode=async_mode)
@@ -30,7 +31,12 @@ def background_thread():
         priceETHByBit = ((requests.get(urlETHByBit)).json())['result'][0]['index_price']
         priceETHBinance = str(round(float(((requests.get(urlETHBinance)).json())['price']),2))
 		
+        verdictETH = compare(priceETHByBit, priceETHBinance)
+        verdictBTC = compare(priceBTCByBit, priceBTCBinance)
 		
+
+        socketio.emit('Response_Verdict_ETH',{'data': verdictETH, 'count': count})
+        socketio.emit('Response_Verdict_BTC',{'data': verdictBTC, 'count': count})
         socketio.emit('Response_BTCUSDT_ByBit',{'data': 'ByBit (USDT): ' + priceBTCByBit, 'count': count})
         socketio.emit('Response_BTCUSDT_Binance',{'data': 'Binance (USDT): ' + priceBTCBinance, 'count': count})
         socketio.emit('Response_ETHUSDT_ByBit',{'data': 'ByBit (USDT): ' + priceETHByBit, 'count': count})
@@ -49,6 +55,10 @@ def btc():
 @socketio.event
 def my_event(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('Response_Verdict_ETH',
+         {'data': message['data'], 'count': session['receive_count']})
+    emit('Response_Verdict_BTC',
+         {'data': message['data'], 'count': session['receive_count']})
     emit('Response_BTCUSDT_ByBit',
          {'data': message['data'], 'count': session['receive_count']})
     emit('Response_BTCUSDT_Binance',
@@ -57,6 +67,13 @@ def my_event(message):
          {'data': message['data'], 'count': session['receive_count']})
     emit('Response_ETHUSDT_Binance',
          {'data': message['data'], 'count': session['receive_count']})
+
+def compare(bybit, binance):
+    if(bybit < binance):
+        return "It's lower on Bybit now at " + bybit
+    else:
+        return "It's lower on Binance now at " + binance
+
 
 @socketio.event
 def connect():
