@@ -23,7 +23,7 @@
                 socket.emit('my_event', { data: 'I\'m connected!' });
             });
 
-            socket.on('Response_Verdict_ETH', function (msg, cb) {
+            socket.on('Response_Verdict', function (msg, cb) {
                 $('#logVerdict').text($('<div/>').append(msg.data).html());
                 if (cb)
                     cb();
