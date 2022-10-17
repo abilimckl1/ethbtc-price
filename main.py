@@ -1,5 +1,4 @@
 from threading import Lock
-from tkinter.messagebox import NO
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO, emit
 import requests
