@@ -31,9 +31,9 @@ def background_thread():
         priceETHBinance = str(round(float(((requests.get(urlETHBinance)).json())['price']),2))
 		
         verdictETH = compare(priceETHByBit, priceETHBinance)
-        socketio.emit('Response_Verdict',{'data': verdictETH, 'count': count})
+        socketio.emit('Response_Verdict_ETH',{'data': verdictETH, 'count': count})
         verdictBTC = compare(priceBTCByBit, priceBTCBinance)
-        socketio.emit('Response_Verdict',{'data': verdictBTC, 'count': count})
+        socketio.emit('Response_Verdict_BTC',{'data': verdictBTC, 'count': count})
 		
 
         socketio.emit('Response_BTCUSDT_ByBit',{'data': 'ByBit (USDT): ' + priceBTCByBit, 'count': count})
@@ -54,7 +54,9 @@ def btc():
 @socketio.event
 def my_event(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('Response_Verdict',
+    emit('Response_Verdict_ETH',
+         {'data': message['data'], 'count': session['receive_count']})
+    emit('Response_Verdict_BTC',
          {'data': message['data'], 'count': session['receive_count']})
     emit('Response_BTCUSDT_ByBit',
          {'data': message['data'], 'count': session['receive_count']})
