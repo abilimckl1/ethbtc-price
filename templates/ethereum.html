@@ -23,11 +23,11 @@
                 socket.emit('my_event', { data: 'I\'m connected!' });
             });
 
-            socket.on('Response_Verdict', function (msg, cb) {
-                $('#logVerdict').text($('<div/>').append(msg.data).html());
-                if (cb)
-                    cb();
-            });
+            // socket.on('Response_Verdict', function (msg, cb) {
+            //     $('#logVerdict').text($('<div/>').append(msg.data).html());
+            //     if (cb)
+            //         cb();
+            // });
 
             socket.on('Response_ETHUSDT_ByBit', function (msg, cb) {
                 $('#log1').text($('<div/>').append(msg.data).html());
@@ -55,9 +55,9 @@
         </nav>
         <div class="container">
             <h1>Ethereum Price (USDT/ETH)</h1>  
-            <h1>
+            <!-- <h1>
                 <div id="logVerdict"></div>
-            </h1>
+            </h1> -->
             <h2>
                 <div id="log1"></div><br>
                 <div id="log2"></div>
