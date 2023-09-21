@@ -1,6 +1,4 @@
 from threading import Lock
-import eventlet
-import socketio
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO, emit
 import requests
@@ -13,8 +11,8 @@ import requests
 async_mode = None
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet')
-thread = None
+socketio = SocketIO(app, async_mode=async_mode)
+thread = 4
 thread_lock = Lock()
 
 urlBTCByBit = 'https://api-testnet.bybit.com/v2/public/tickers?symbol=BTCUSDT'
@@ -83,5 +81,4 @@ def connect():
     emit('my_response', {'data': 'Connected', 'count': 0})
 
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5000)), app)
-    #socketio.run(app)
+    socketio.run(app)
