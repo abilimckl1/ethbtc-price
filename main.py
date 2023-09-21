@@ -3,6 +3,8 @@ from flask import Flask, render_template, session
 from flask_socketio import SocketIO, emit
 import requests
 
+
+
 # Set this variable to "threading", "eventlet" or "gevent" to test the
 # different async modes, or leave it set to None for the application to choose
 # the best option based on installed packages.
@@ -30,10 +32,10 @@ def background_thread():
         priceETHByBit = ((requests.get(urlETHByBit)).json())['result'][0]['index_price']
         priceETHBinance = str(round(float(((requests.get(urlETHBinance)).json())['price']),2))
 		
-        # verdictETH = compare(priceETHByBit, priceETHBinance)
-        # socketio.emit('Response_Verdict',{'data': verdictETH, 'count': count})
-        # verdictBTC = compare(priceBTCByBit, priceBTCBinance)
-        # socketio.emit('Response_Verdict',{'data': verdictBTC, 'count': count})
+        verdictETH = compare(priceETHByBit, priceETHBinance)
+        socketio.emit('Response_Verdict',{'data': verdictETH, 'count': count})
+        verdictBTC = compare(priceBTCByBit, priceBTCBinance)
+        socketio.emit('Response_Verdict',{'data': verdictBTC, 'count': count})
 		
 
         socketio.emit('Response_BTCUSDT_ByBit',{'data': 'ByBit (USDT): ' + priceBTCByBit, 'count': count})
@@ -54,8 +56,6 @@ def btc():
 @socketio.event
 def my_event(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
-    # emit('Response_Verdict',
-    #      {'data': message['data'], 'count': session['receive_count']})
     emit('Response_BTCUSDT_ByBit',
          {'data': message['data'], 'count': session['receive_count']})
     emit('Response_BTCUSDT_Binance',
@@ -65,11 +65,11 @@ def my_event(message):
     emit('Response_ETHUSDT_Binance',
          {'data': message['data'], 'count': session['receive_count']})
 
-# def compare(bybit, binance):
-#     if(bybit < binance):
-#         return "It's lower on Bybit now at " + bybit
-#     else:
-#         return "It's lower on Binance now at " + binance
+def compare(bybit, binance):
+     if(bybit < binance):
+         return "It's lower on Bybit now at " + bybit
+     else:
+         return "It's lower on Binance now at " + binance
 
 
 @socketio.event
