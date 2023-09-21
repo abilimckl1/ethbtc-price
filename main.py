@@ -33,9 +33,9 @@ def background_thread():
         priceETHBinance = str(round(float(((requests.get(urlETHBinance)).json())['price']),2))
 		
         verdictETH = compare(priceETHByBit, priceETHBinance)
-        socketio.emit('Response_Verdict',{'data': verdictETH, 'count': count})
+        socketio.emit('Response_Verdict_ETH',{'data': verdictETH, 'count': count})
         verdictBTC = compare(priceBTCByBit, priceBTCBinance)
-        socketio.emit('Response_Verdict',{'data': verdictBTC, 'count': count})
+        socketio.emit('Response_Verdict_BTC',{'data': verdictBTC, 'count': count})
 		
 
         socketio.emit('Response_BTCUSDT_ByBit',{'data': 'ByBit (USDT): ' + priceBTCByBit, 'count': count})
