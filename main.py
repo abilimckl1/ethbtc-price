@@ -1,4 +1,6 @@
 from threading import Lock
+import eventlet
+import socketio
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO, emit
 import requests
@@ -11,7 +13,7 @@ import requests
 async_mode = None
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode=async_mode)
+socketio = SocketIO(app, async_mode='eventlet')
 thread = None
 thread_lock = Lock()
 
@@ -81,4 +83,5 @@ def connect():
     emit('my_response', {'data': 'Connected', 'count': 0})
 
 if __name__ == '__main__':
-    socketio.run(app)
+    eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5000)), app)
+    #socketio.run(app)
